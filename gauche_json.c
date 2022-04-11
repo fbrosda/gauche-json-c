@@ -6,11 +6,6 @@
 #include <json.h>
 #include "json_visit.h"
 
-/*
- * The following function is a dummy one; replace it for
- * your C function definitions.
- */
-
 static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, const char *jso_key, size_t *jso_index, void *userarg)
 {
   /* printf("flags: 0x%x, key: %s, index: %ld, value: %s\n", flags, */
@@ -84,7 +79,7 @@ ScmObj parse_json_string(ScmObj o)
     if(jobj == NULL) { // parse error -> return nil
       return SCM_NIL;
     }
-    ScmObj* out = SCM_NEW2(ScmObj*, sizeof(ScmObj)*10);
+    ScmObj* out = SCM_NEW2(ScmObj*, sizeof(ScmObj)*128);
     json_c_visit(jobj, 0, create_scm_obj, &out);
     return *out;
   }
