@@ -1,0 +1,14 @@
+;;;
+;;; gauche_jsonlib.stub
+;;;
+
+(declcode
+ (.include "gauche_json.h"))
+
+(define-cproc parse-json-string (str)
+  (return (parse_json_string str)))
+
+
+;; Local variables:
+;; mode: scheme
+;; end:
