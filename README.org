@@ -16,5 +16,5 @@ should be straight forward.
 - [ ] map ~null~ to ~'null~, currently it's mapped to ~()~
 - [ ] max nesting depth of json objects/arrays is currently 128, make
   this dynamic
-- [ ] add other json utility functions, maybe also import stuff from
-  ~rfc.json~ and reexport for convenience
+- [ ] add other json utility functions
+- [X] import stuff from ~rfc.json~ and reexport for convenience

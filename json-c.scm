@@ -1,20 +1,17 @@
-;;;
-;;; gauche_json
-;;;
-
 (define-module json-c
+  (use rfc.json
+       :only (<json-parse-error>
+	      construct-json
+	      construct-json-string))
   (export parse-json-string
 	  parse-json
-	  parse-json*))
+	  parse-json*
+	  construct-json
+	  construct-json-string))
 
 (select-module json-c)
 
-;; Loads extension
 (dynamic-load "gauche_json")
-
-;;
-;; Put your Scheme definitions here
-;;
 
 (define (parse-json :optional (input-port (current-input-port)))
   (let1 inpt (read-string +inf.0 input-port)

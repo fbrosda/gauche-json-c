@@ -4,7 +4,7 @@
 
 #include "gauche_json.h"
 #include <json.h>
-#include "json_visit.h"
+#include <json_visit.h>
 
 static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, const char *jso_key, size_t *jso_index, void *userarg)
 {
