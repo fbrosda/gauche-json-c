@@ -101,7 +101,7 @@ void Scm_Init_gauche_json(void)
     SCM_INIT_EXTENSION(gauche_json);
 
     /* Create the module if it doesn't exist yet. */
-    mod = SCM_MODULE(SCM_FIND_MODULE("gauche_json", TRUE));
+    mod = SCM_MODULE(SCM_FIND_MODULE("json-c", TRUE));
 
     /* Register stub-generated procedures */
     Scm_Init_gauche_jsonlib(mod);

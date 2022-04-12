@@ -4,9 +4,9 @@
 
 (use gauche.test)
 
-(test-start "gauche_json")
-(use gauche_json)
-(test-module 'gauche_json)
+(test-start "json-c")
+(use json-c)
+(test-module 'json-c)
 
 ;; The following is a dummy test code.
 ;; Replace it for your tests.

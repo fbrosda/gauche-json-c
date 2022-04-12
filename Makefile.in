@@ -31,7 +31,7 @@ LOCAL_PATHS = "@LOCAL_PATHS@"
 PACKAGE   = gauche-json
 
 ARCHFILES = gauche_json.$(SOEXT)
-SCMFILES  = $(srcdir)/gauche_json.scm
+SCMFILES  = $(srcdir)/json-c.scm
 HEADERS   =
 
 TARGET    = $(ARCHFILES)
