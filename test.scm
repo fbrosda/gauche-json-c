@@ -37,6 +37,13 @@
        '(("a" . 12) ("b" . #(1 2 3)) ("c" . (("x" . #f))))
        (parse-json-string "{\"a\": 12, \"b\": [1,2,3], \"c\": {\"x\": false}}"))
 
+(test* "parse-json"
+       '()
+       (with-input-from-string "{}" parse-json))
+
+(test* "parse-json*"
+       '(1 #(3 4) (("a" . 1)))
+       (with-input-from-string "1 \n [3, 4] \n {\"a\": 1}" parse-json*))
 
 ;; If you don't want `gosh' to exit with nonzero status even if
 ;; the test fails, pass #f to :exit-on-failure.
