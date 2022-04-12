@@ -1,0 +1,5 @@
+-I
+/usr/include/json-c/
+-I
+/usr/lib/gauche-0.98/0.9.11/include/
+
