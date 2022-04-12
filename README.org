@@ -1,0 +1,13 @@
+#+title: gauche-json-c
+#+author: Fabian Brosda
+
+This is a small wrapper around the c library [[https://github.com/json-c/json-c][json-c]], to use it from
+[[https://github.com/shirok/Gauche][Gauche Scheme]]. The problem with the provided module ~rfc.json~ is,
+that it is extremely slow for larger files.
+
+This modules provides three functions ~parse-json~, ~parse-json*~ and
+~parse-json-string~, so replacing the integrated ~rfc.json~ module
+should be straight forward.
+
+One Limitation is, that ~parse-json*~ assumes one valid JSON
+entry per line.
