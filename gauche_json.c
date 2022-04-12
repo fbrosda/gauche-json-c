@@ -76,7 +76,7 @@ ScmObj parse_json_string(ScmObj o)
 {
   struct json_object *jobj = json_tokener_parse(SCM_STRING_START(o));
   if(jobj == NULL) { // parse error -> throw error
-    return Scm_RaiseCondition(SCM_SYMBOL_VALUE("rfc.json", "<json-parse-error>"), SCM_RAISE_CONDITION_MESSAGE, "expecting one of (\"false\" \"true\" \"null\" #\{ #\])");
+    return Scm_RaiseCondition(SCM_SYMBOL_VALUE("rfc.json", "<json-parse-error>"), SCM_RAISE_CONDITION_MESSAGE, "expecting one of (\"false\" \"true\" \"null\" { } [ ])");
   }
   ScmObj* out = SCM_NEW2(ScmObj*, sizeof(ScmObj)*128);
   json_c_visit(jobj, 0, create_scm_obj, &out);
