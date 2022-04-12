@@ -9,5 +9,12 @@ This modules provides three functions ~parse-json~, ~parse-json*~ and
 ~parse-json-string~, so replacing the integrated ~rfc.json~ module
 should be straight forward.
 
-One Limitation is, that ~parse-json*~ assumes one valid JSON
-entry per line.
+* Limitiations
+- ~parse-json*~ assumes one valid JSON entry per line.
+
+* Todo
+- [ ] map ~null~ to ~'null~, currently it's mapped to ~()~
+- [ ] max nesting depth of json objects/arrays is currently 128, make
+  this dynamic
+- [ ] add other json utility functions, maybe also import stuff from
+  ~rfc.json~ and reexport for convenience
