@@ -25,4 +25,7 @@
   (reverse!
    (rlet1 res '()
 	  (until (read-line input-port) eof-object? => l
-		 (set! res (cons (parse-json-string l) res))))))
+		 (guard (e [else (print l) ; TODO: more flexibility?
+				 (report-error e)])
+		   (when (> (string-length l) 0)
+		     (set! res (cons (parse-json-string l) res))))))))
