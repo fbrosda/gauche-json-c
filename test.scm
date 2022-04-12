@@ -13,6 +13,14 @@
 (test* "Int" 1 (parse-json-string "1"))
 (test* "Double" 0.5 (parse-json-string "0.5"))
 
+(test* "Invalid input" #f (guard (e [else #f])
+			    (parse-json-string 1)
+			    #t))
+
+(test* "Invalid input" #f (guard (e [else #f])
+			    (parse-json-string "[1, ")
+			    #t))
+
 (test* "True" #t (parse-json-string "true"))
 (test* "False" #f (parse-json-string "false"))
 

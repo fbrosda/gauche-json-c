@@ -74,18 +74,13 @@ static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, 
 
 ScmObj parse_json_string(ScmObj o)
 {
-  if(SCM_STRINGP(o)) {
-    struct json_object *jobj = json_tokener_parse(SCM_STRING_START(o));
-    if(jobj == NULL) { // parse error -> return nil
-      return SCM_NIL;
-    }
-    ScmObj* out = SCM_NEW2(ScmObj*, sizeof(ScmObj)*128);
-    json_c_visit(jobj, 0, create_scm_obj, &out);
-    return *out;
+  struct json_object *jobj = json_tokener_parse(SCM_STRING_START(o));
+  if(jobj == NULL) { // parse error -> throw error
+    return Scm_RaiseCondition(SCM_SYMBOL_VALUE("rfc.json", "<json-parse-error>"), SCM_RAISE_CONDITION_MESSAGE, "expecting one of (\"false\" \"true\" \"null\" #\{ #\])");
   }
-  else {
-    return SCM_NIL;
-  }
+  ScmObj* out = SCM_NEW2(ScmObj*, sizeof(ScmObj)*128);
+  json_c_visit(jobj, 0, create_scm_obj, &out);
+  return *out;
 }
 
 /*
@@ -95,14 +90,14 @@ extern void Scm_Init_gauche_jsonlib(ScmModule*);
 
 void Scm_Init_gauche_json(void)
 {
-    ScmModule *mod;
+  ScmModule *mod;
 
-    /* Register this DSO to Gauche */
-    SCM_INIT_EXTENSION(gauche_json);
+  /* Register this DSO to Gauche */
+  SCM_INIT_EXTENSION(gauche_json);
 
-    /* Create the module if it doesn't exist yet. */
-    mod = SCM_MODULE(SCM_FIND_MODULE("json-c", TRUE));
+  /* Create the module if it doesn't exist yet. */
+  mod = SCM_MODULE(SCM_FIND_MODULE("json-c", TRUE));
 
-    /* Register stub-generated procedures */
-    Scm_Init_gauche_jsonlib(mod);
+  /* Register stub-generated procedures */
+  Scm_Init_gauche_jsonlib(mod);
 }

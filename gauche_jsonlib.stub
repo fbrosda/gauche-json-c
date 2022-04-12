@@ -6,8 +6,10 @@
  (.include "gauche_json.h"))
 
 (define-cproc parse-json-string (str)
-  (return (parse_json_string str)))
-
+  (if (SCM_STRINGP str)
+    (return (parse_json_string str))
+    (return (Scm_RaiseCondition (SCM_OBJ SCM_CLASS_ERROR)
+				SCM_RAISE_CONDITION_MESSAGE "<string> required")))) ; TODO: how to stringify str
 
 ;; Local variables:
 ;; mode: scheme

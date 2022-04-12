@@ -28,7 +28,7 @@ EXEEXT = @EXEEXT@
 LOCAL_PATHS = "@LOCAL_PATHS@"
 
 # Module-specific stuff
-PACKAGE   = gauche-json
+PACKAGE   = gauche-json-c
 
 ARCHFILES = gauche_json.$(SOEXT)
 SCMFILES  = $(srcdir)/json-c.scm
