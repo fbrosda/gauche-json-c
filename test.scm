@@ -55,6 +55,14 @@
        '(1 #(3 4) (("a" . 1)))
        (with-input-from-string "1 \n [3, 4] \n {\"a\": 1}" parse-json*))
 
+(test* "json-null? 1"
+       #t
+       (json-null? (parse-json-string "null")))
+
+(test* "json-null? 2"
+       #f
+       (json-null? (parse-json-string "1")))
+
 ;; If you don't want `gosh' to exit with nonzero status even if
 ;; the test fails, pass #f to :exit-on-failure.
 (test-end :exit-on-failure #t)

@@ -7,7 +7,8 @@
 	  parse-json
 	  parse-json*
 	  construct-json
-	  construct-json-string))
+	  construct-json-string
+	  json-null?))
 
 (select-module json-c)
 
@@ -26,3 +27,6 @@
 				 (report-error e)])
 		   (when (> (string-length l) 0)
 		     (set! res (cons (parse-json-string l) res))))))))
+
+(define (json-null? obj)
+  (eq? 'null obj))
