@@ -13,7 +13,7 @@ should be straight forward.
 - ~parse-json*~ assumes one valid JSON entry per line.
 
 * Todo
-- [ ] map ~null~ to ~'null~, currently it's mapped to ~()~
+- [X] map ~null~ to 'null, currently it's mapped to ~()~
 - [ ] max nesting depth of json objects/arrays is currently 128, make
   this dynamic
 - [ ] add other json utility functions

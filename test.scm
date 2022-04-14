@@ -23,11 +23,13 @@
 
 (test* "True" #t (parse-json-string "true"))
 (test* "False" #f (parse-json-string "false"))
+(test* "null" 'null (parse-json-string "null"))
 
 (test* "Empty String" "" (parse-json-string "\"\""))
 (test* "String" "Hello World!" (parse-json-string "\"Hello World!\""))
 
 (test* "Array []" #() (parse-json-string "[]"))
+(test* "Array [null]" #(null) (parse-json-string "[null]"))
 (test* "Array [1,2]" #(1 2) (parse-json-string "[1, 2]"))
 (test* "Array [[], []]" #(#() #()) (parse-json-string "[[], []]"))
 (test* "Array [[1,2,3]]" #(#(1 2 3)) (parse-json-string "[[1,2,3]]"))

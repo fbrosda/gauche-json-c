@@ -5,6 +5,7 @@
 #include "gauche_json.h"
 #include <json.h>
 #include <json_visit.h>
+#include <stddef.h>
 
 static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, const char *jso_key, size_t *jso_index, void *userarg)
 {
@@ -34,7 +35,7 @@ static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, 
 
   switch (val_type) {
   case json_type_null:
-    *sp = SCM_NIL;
+    *sp = SCM_INTERN("null");
     break;
   case json_type_boolean:
     *sp = SCM_MAKE_BOOL(json_object_get_boolean(jso));
@@ -74,8 +75,9 @@ static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, 
 
 ScmObj parse_json_string(ScmObj o)
 {
-  struct json_object *jobj = json_tokener_parse(SCM_STRING_START(o));
-  if(jobj == NULL) { // parse error -> throw error
+  enum json_tokener_error error;
+  struct json_object *jobj = json_tokener_parse_verbose(SCM_STRING_START(o), &error);
+  if(error != json_tokener_success) { // parse error -> throw error
     return Scm_RaiseCondition(SCM_SYMBOL_VALUE("rfc.json", "<json-parse-error>"), SCM_RAISE_CONDITION_MESSAGE, "expecting one of (\"false\" \"true\" \"null\" { } [ ])");
   }
   ScmObj* out = SCM_NEW2(ScmObj*, sizeof(ScmObj)*128);
