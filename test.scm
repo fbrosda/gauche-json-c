@@ -8,8 +8,7 @@
 (use json-c)
 (test-module 'json-c)
 
-;; The following is a dummy test code.
-;; Replace it for your tests.
+(test* "<empty string>" #t (eof-object? (parse-json-string "")))
 (test* "Int" 1 (parse-json-string "1"))
 (test* "Double" 0.5 (parse-json-string "0.5"))
 
