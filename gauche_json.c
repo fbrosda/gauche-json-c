@@ -25,7 +25,7 @@ static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, 
 	long idx = (long)*jso_index;
 	Scm_VectorSet(SCM_VECTOR(sp[-2]), idx, sp[-1]);
       } else if (parent_type == json_type_object) {
-	sp[-2] = Scm_Acons(SCM_MAKE_STR(jso_key), sp[-1], sp[-2]);
+	sp[-2] = Scm_Acons(SCM_MAKE_STR_COPYING(jso_key), sp[-1], sp[-2]);
       }
     }
 
@@ -47,7 +47,7 @@ static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, 
     *sp = SCM_MAKE_INT(json_object_get_int64(jso));
     break;
   case json_type_string:
-    *sp= SCM_MAKE_STR(json_object_get_string(jso));
+    *sp= SCM_MAKE_STR_COPYING(json_object_get_string(jso));
     break;
   case json_type_object:
     *sp = SCM_NIL;
@@ -67,7 +67,7 @@ static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, 
     long idx = (long)*jso_index;
     Scm_VectorSet(SCM_VECTOR(sp[-1]), idx, *sp);
   } else if (parent_type == json_type_object) {
-    sp[-1] = Scm_Acons(SCM_MAKE_STR(jso_key), *sp, sp[-1]);
+    sp[-1] = Scm_Acons(SCM_MAKE_STR_COPYING(jso_key), *sp, sp[-1]);
   }
 
   return JSON_C_VISIT_RETURN_CONTINUE;
@@ -82,6 +82,7 @@ ScmObj parse_json_string(ScmObj o)
   }
   ScmObj* out = SCM_NEW2(ScmObj*, sizeof(ScmObj)*128);
   json_c_visit(jobj, 0, create_scm_obj, &out);
+  json_object_put(jobj);
   return *out;
 }
 
