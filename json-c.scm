@@ -14,11 +14,12 @@
 
 (dynamic-load "gauche_json")
 
+;; Parse one JSON expression from INPUT-PORT.
 (define (parse-json :optional (input-port (current-input-port)))
   (let1 inpt (read-string +inf.0 input-port)
     (parse-json-string inpt)))
 
-;; Note: Expects one json expression per line!
+;; Parse multiple JSON expressions, one per line provided by INPUT-PORT.
 (define (parse-json* :optional (input-port (current-input-port)))
   (reverse!
    (rlet1 res '()

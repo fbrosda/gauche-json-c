@@ -5,6 +5,8 @@
 (declcode
  (.include "gauche_json.h"))
 
+;; Parse STR and return the scheme representation of the JSON
+;; expression.
 (define-cproc parse-json-string (str)
   (if (SCM_STRINGP str)
     (if (== 0 (SCM_STRING_BODY_LENGTH (SCM_STRING_BODY str)))

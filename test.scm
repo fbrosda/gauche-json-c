@@ -12,9 +12,11 @@
 (test* "Int" 1 (parse-json-string "1"))
 (test* "Double" 0.5 (parse-json-string "0.5"))
 
-(test* "Invalid input" #f (guard (e [else #f])
-			    (parse-json-string 1)
-			    #t))
+(test* "Invalid input"
+       "<string> required"
+       (guard (e [else (~ e 'message)])
+	 (parse-json-string 1)
+	 #f))
 
 (test* "Invalid input" #f (guard (e [else #f])
 			    (parse-json-string "[1, ")
@@ -54,13 +56,8 @@
        '(1 #(3 4) (("a" . 1)))
        (with-input-from-string "1 \n [3, 4] \n {\"a\": 1}" parse-json*))
 
-(test* "json-null? 1"
-       #t
-       (json-null? (parse-json-string "null")))
-
-(test* "json-null? 2"
-       #f
-       (json-null? (parse-json-string "1")))
+(test* "json-null?" #t (json-null? (parse-json-string "null")))
+(test* "json-null?" #f (json-null? (parse-json-string "1")))
 
 ;; If you don't want `gosh' to exit with nonzero status even if
 ;; the test fails, pass #f to :exit-on-failure.
