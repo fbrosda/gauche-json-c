@@ -54,8 +54,7 @@ static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, 
     *arg = sp+1;
     return JSON_C_VISIT_RETURN_CONTINUE;
   case json_type_array:
-    size_t len = json_object_array_length(jso);
-    *sp = Scm_MakeVector(len, SCM_MAKE_INT(0));
+    *sp = Scm_MakeVector(json_object_array_length(jso), SCM_MAKE_INT(0));
     *arg = sp+1;
     break;
   default:
