@@ -7,13 +7,10 @@
 
 ;; Parse STR and return the scheme representation of the JSON
 ;; expression.
-(define-cproc parse-json-string (str)
-  (if (SCM_STRINGP str)
-    (if (== 0 (SCM_STRING_BODY_LENGTH (SCM_STRING_BODY str)))
-      (return SCM_EOF)
-      (return (parse_json_string str)))
-    (return (Scm_RaiseCondition (SCM_OBJ SCM_CLASS_ERROR)
-				SCM_RAISE_CONDITION_MESSAGE "<string> required")))) ; TODO: how to stringify str
+(define-cproc parse-json-string (str::<string>)
+  (if (== 0 (SCM_STRING_BODY_LENGTH (SCM_STRING_BODY str)))
+    (return SCM_EOF)
+    (return (parse_json_string (SCM_OBJ str)))))
 
 ;; Local variables:
 ;; mode: scheme

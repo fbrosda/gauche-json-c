@@ -13,7 +13,7 @@
 (test* "Double" 0.5 (parse-json-string "0.5"))
 
 (test* "Invalid input"
-       "<string> required"
+       "<string> required, but got 1"
        (guard (e [else (~ e 'message)])
 	 (parse-json-string 1)
 	 #f))
