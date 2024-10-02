@@ -1,5 +1,5 @@
 (define-gauche-package "gauche-json-c"
-  :version "0.1.1"
+  :version "0.1.2"
   :description "Fast json read/write for gauche using json-c."
   :require (("Gauche" (>= "0.9.10")))
   :providing-modules (json-c)
