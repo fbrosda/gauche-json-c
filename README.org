@@ -9,8 +9,10 @@ This modules provides three functions ~parse-json~, ~parse-json*~ and
 ~parse-json-string~, so replacing the integrated ~rfc.json~ module
 should be straight forward.
 
-* Limitiations
+* Limitations
 - ~parse-json*~ assumes one valid JSON entry per line.
+- As json-c uses 64 bit (u)int internally the max/min values for integers are
+  18446744073709551615/-9223372036854775808 respectively.
 
 * Todo
 - [X] map ~null~ to 'null, currently it's mapped to ~()~

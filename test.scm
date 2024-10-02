@@ -9,7 +9,25 @@
 (test-module 'json-c)
 
 (test* "<empty string>" #t (eof-object? (parse-json-string "")))
-(test* "Int" 1 (parse-json-string "1"))
+(test* "Int 1" 1 (parse-json-string "1"))
+(test* "Int 2" -1 (parse-json-string "-1"))
+(test* "Int 3" 0 (parse-json-string "0"))
+(test* "Large Int 1" 2305843009213693952 (parse-json-string "2305843009213693952"))
+(test* "Large Int 2" 18446744073709551615 (parse-json-string "18446744073709551615"))
+(test* "Large Int 3" "integer value is out of range."
+       (guard (e [else (~ e 'message)])
+         (parse-json-string "999999999999999999999999999999")))
+(test* "Small Int 1" -2305843009213693952 (parse-json-string "-2305843009213693952"))
+(test* "Small Int 2" -9223372036854775808 (parse-json-string "-9223372036854775808"))
+(test* "Large Int 3" "integer value is out of range."
+       (guard (e [else (~ e 'message)])
+         (parse-json-string "-999999999999999999999999999999")))
+
+(test* "Int Parse Error" "integer value is out of range."
+       (guard (e [else (~ e 'message)])
+         (parse-json-string "{\"a\": 999999999999999999999999999999, \"b\": 2}")))
+
+
 (test* "Double" 0.5 (parse-json-string "0.5"))
 
 (test* "Invalid input"

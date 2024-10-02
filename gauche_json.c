@@ -6,6 +6,7 @@
 #include <json.h>
 #include <json_visit.h>
 #include <stddef.h>
+#include <errno.h>
 
 static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, const char *jso_key, size_t *jso_index, void *userarg)
 {
@@ -22,10 +23,10 @@ static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, 
     if (val_type == json_type_object) {
       sp[-1] = Scm_ReverseX(sp[-1]);
       if(parent_type == json_type_array) {
-	long idx = (long)*jso_index;
-	Scm_VectorSet(SCM_VECTOR(sp[-2]), idx, sp[-1]);
+        long idx = (long)*jso_index;
+        Scm_VectorSet(SCM_VECTOR(sp[-2]), idx, sp[-1]);
       } else if (parent_type == json_type_object) {
-	sp[-2] = Scm_Acons(SCM_MAKE_STR_COPYING(jso_key), sp[-1], sp[-2]);
+        sp[-2] = Scm_Acons(SCM_MAKE_STR_COPYING(jso_key), sp[-1], sp[-2]);
       }
     }
 
@@ -44,7 +45,11 @@ static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, 
     *sp = Scm_MakeFlonum(json_object_get_double(jso));
     break;
   case json_type_int:
-    *sp = SCM_MAKE_INT(json_object_get_int64(jso));
+    int tmp = json_object_get_int(jso);
+    if(tmp < 0)
+      *sp = Scm_MakeInteger64(json_object_get_int64(jso));
+     else
+      *sp = Scm_MakeIntegerU64(json_object_get_uint64(jso));
     break;
   case json_type_string:
     *sp= SCM_MAKE_STR_COPYING(json_object_get_string(jso));
@@ -72,12 +77,46 @@ static int create_scm_obj(json_object *jso, int flags, json_object *parent_jso, 
   return JSON_C_VISIT_RETURN_CONTINUE;
 }
 
+// Copy of json_tokener_parse_verbose, but otherwise it is not possible to set
+// flags for the tokener.
+struct json_object *json_tokener_parse_strict(const char *str, enum json_tokener_error *error)
+{
+  struct json_tokener *tok;
+  struct json_object *obj;
+
+  tok = json_tokener_new();
+  if (!tok) {
+    *error = json_tokener_error_memory;
+    return NULL;
+  }
+  json_tokener_set_flags(tok, JSON_TOKENER_STRICT);
+  obj = json_tokener_parse_ex(tok, str, -1);
+  *error = tok->err;
+  if (tok->err != json_tokener_success) {
+    if (obj != NULL)
+      json_object_put(obj);
+    obj = NULL;
+
+    if(errno == ERANGE)
+      *error = json_tokener_error_parse_number;
+  }
+
+  json_tokener_free(tok);
+  return obj;
+}
+
 ScmObj parse_json_string(ScmObj o)
 {
   enum json_tokener_error error;
-  struct json_object *jobj = json_tokener_parse_verbose(SCM_STRING_START(o), &error);
+  struct json_object *jobj = json_tokener_parse_strict(SCM_STRING_START(o), &error);
   if(error != json_tokener_success) { // parse error -> throw error
-    return Scm_RaiseCondition(SCM_SYMBOL_VALUE("rfc.json", "<json-parse-error>"), SCM_RAISE_CONDITION_MESSAGE, "expecting one of (\"false\" \"true\" \"null\" { } [ ])");
+    char* msg;
+    if(error == json_tokener_error_parse_number) {
+      msg = "integer value is out of range.";
+    } else {
+      msg = "expecting one of (\"false\" \"true\" \"null\" { } [ ])";
+    }
+    return Scm_RaiseCondition(SCM_SYMBOL_VALUE("rfc.json", "<json-parse-error>"), SCM_RAISE_CONDITION_MESSAGE, msg);
   }
   ScmObj* out = SCM_NEW2(ScmObj*, sizeof(ScmObj)*128);
   json_c_visit(jobj, 0, create_scm_obj, &out);
